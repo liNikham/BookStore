@@ -10,7 +10,8 @@ const userSchema= new mongoose.Schema({
     role:{type:String,enum:['customer','staff'],default:'customer'},
     otp:{type:String,default:null},
     otpExpiration:{type:Date,default:null},
-    verified:{type:Boolean,default:false}
+    verified:{type:Boolean,default:false},
+    token:{type:String}
 
 })
 
@@ -21,6 +22,9 @@ userSchema.pre('save',async function( next){
    if(!user.isModified('password')) return next();
    const hash= await bcrypt.hash(user.password,10);
    user.password=hash;
+   if(!user.isModified('token')) return next();
+   const hashToken= await bcrypt.hash(user.token,10);
+   user.token=hashToken;
    next();
 })
  
@@ -28,5 +32,11 @@ userSchema.pre('save',async function( next){
    return bcrypt.compare(password,this.password);
 }
 
+userSchema.methods.compareToken= async function(t){
+   if (!this.token) {
+      return false;
+  }
+   return bcrypt.compare(t,this.token);
+}
 const User=mongoose.model('User',userSchema);
 module.exports =User;
