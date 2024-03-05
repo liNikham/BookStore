@@ -126,7 +126,7 @@ exports.signup= async (req,res)=>{
  exports.resendOtp=async( req,res)=>{
     const otp = generateOtp();
     const user= req.user;
-    const existingUser= User.findOne({email:user.email});
+    const existingUser= await User.findOne({email:user.email});
     if(!existingUser){
       return res.status(401).json({error:'User not Found'})
     }
