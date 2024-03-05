@@ -11,7 +11,8 @@ const userSchema= new mongoose.Schema({
     otp:{type:String,default:null},
     otpExpiration:{type:Date,default:null},
     verified:{type:Boolean,default:false},
-    token:{type:String}
+    token:{type:String},
+    profile:{type:mongoose.Schema.Types.ObjectId,ref:'UserProfile'},
 
 })
 

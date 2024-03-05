@@ -58,9 +58,11 @@ exports.signup= async (req,res)=>{
       const user=new User({email,password,role,otp,otpExpiration});
       await  user.save();
       const tokenPayload={
-        email:email
+        email:email,
+        role:role,
+        _id:user._id
     }
-
+    console.log(tokenPayload);
     const token=jwt.sign(tokenPayload,process.env.JWT_SECRET);
      return  res.status(201).json({message:'Verification code sent successfully on your email',token});
     }
@@ -169,12 +171,10 @@ exports.signup= async (req,res)=>{
     const token = req.query.token;
     const user= req.user;
     const email=user.email;
-    console.log(email);
     const existingUser= await User.findOne({email})
     if(!existingUser){
       return res.status(500).json({error:'Not a valid user'});
     }
-   console.log(token);
     const isMatch = existingUser.compareToken(token);
     if(!isMatch){
       return res.status(401).json({error:'Not a valide token'});
@@ -203,10 +203,16 @@ exports.signup= async (req,res)=>{
                return res.status(400).json({message:'Token error'});
             }
             req.user=user;
+            console.log(user);
             next();
 
         });
     } else{
         res.status(500).send('Not a valid token user');
+    }
+  }
+  exports.adminRoute=async(req,res,next)=>{
+    if(req.user.role!=='admin'){
+      return res.status(403).json({error:'Forbidden,Admin access required'});
     }
   }
