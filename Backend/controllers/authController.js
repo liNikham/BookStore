@@ -75,7 +75,7 @@ exports.signup= async (req,res)=>{
      try{
     const {email,password,role}=req.body;
     
-     const user =await User.findOne({email});
+     const user =await User.findOne({email,role});
      // pehle dekh bhai user exist karta hai kya
      if(!user){
         return res.status(500).json({error:'Invalid credentials'});

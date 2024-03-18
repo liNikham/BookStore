@@ -7,7 +7,7 @@
 const userSchema= new mongoose.Schema({
     email:{type:String,unique:true,required:true,lowercase:true,trim:true,match: /^\S+@\S+\.\S+$/},
     password:{type:String,required:true},
-    role:{type:String,enum:['customer','staff'],default:'customer'},
+    role:{type:String,enum:['customer','admin'],default:'customer'},
     otp:{type:String,default:null},
     otpExpiration:{type:Date,default:null},
     verified:{type:Boolean,default:false},
